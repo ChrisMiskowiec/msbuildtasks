@@ -78,12 +78,9 @@ namespace MSBuild.Community.Tasks.Tfs
         /// </value>
         public bool Overwrite { get; set; }
         /// <summary>
-        /// Gets or sets a value indicating whether this <see cref="TfsClient"/> is override.
+        /// Gets or sets the override reason or reason file. If null or empty then override is not used.
         /// </summary>
-        /// <value>
-        ///   <c>true</c> if override; otherwise, <c>false</c>.
-        /// </value>
-        public bool Override { get; set; }
+        public string Override { get; set; }
         /// <summary>
         /// Gets or sets a value indicating whether this <see cref="TfsClient"/> is force.
         /// </summary>
@@ -282,8 +279,6 @@ namespace MSBuild.Community.Tasks.Tfs
                 builder.AppendSwitch("/recursive");
             if (All)
                 builder.AppendSwitch("/all");
-            if (Override)
-                builder.AppendSwitch("/override");
             if (Overwrite)
                 builder.AppendSwitch("/overwrite");
             if (Force)
@@ -326,6 +321,12 @@ namespace MSBuild.Community.Tasks.Tfs
                     shelveset += "," + ShelveSetOwner;
 
                 builder.AppendSwitch(shelveset);
+            }
+
+            if (!string.IsNullOrEmpty(Override))
+            {
+                string @override = "/override:" + Override;
+                builder.AppendSwitch(@override);
             }
         }
 
